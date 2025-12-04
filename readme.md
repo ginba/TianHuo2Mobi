@@ -1,51 +1,8 @@
 # MOBI 轉換器 - 使用說明
 
-## 📋 問題診斷與解決過程
-
-### 發現的問題
-1. ❌ 程序在填完書名後就卡住，出現廣告
-2. ❌ "強制繁體"沒有被勾選
-3. ❌ 等待時間設置在錯誤的位置
-
-### 解決方案
-
-#### 1. 找到"強制繁體"的正確位置
-通過 `mobi_debug.py` 分析HTML，發現：
-- 類型：`<input type="radio">` (單選按鈕，不是checkbox)
-- Name：`country`
-- Value：`tw` (強制繁體)
-- 選項：default(本文預設)、tw(強制繁體)、cn(強制簡體)、ja(日文)
-
-#### 2. 修正選擇邏輯
-使用CSS選擇器直接定位：
-```python
-force_traditional_radio = driver.find_element(
-    By.CSS_SELECTOR, 
-    "input[type='radio'][name='country'][value='tw']"
-)
-```
-
-#### 3. 修正等待時間
-**之前(錯誤):**
-```
-選擇文件 → 填書名 → 等待5分鐘 → 點擊"下一步" → 點擊"開始上傳"
-```
-
-**現在(正確):**
-```
-選擇文件 → 填書名 → 選擇"強制繁體" → 點擊"下一步" → 點擊"開始上傳" → 等待5分鐘
-```
-
-## 🚀 使用最終版本
-
 ### 文件說明
-- `mobi_converter_final.py` - 最終修正版本 ✅
-- `mobi_debug.py` - 調試工具(用於診斷)
-
-### 運行方法
-```bash
-python mobi_converter_final.py
-```
+- AnZhuang.command 是macOS的安裝文件，先用python -m venv .venv 製造虛擬環境，然後雙擊AnZhuang即可 ✅
+- ZhiXing.command 使用時，把txt文件放到mobi_in,然後雙擊ZhiXing，完成後會保存在mobi_out.
 
 ### 功能特性
 ✅ 批量處理所有txt和epub文件
@@ -79,25 +36,6 @@ python mobi_converter_final.py
 10. 自動下載
 11. 繼續下一個文件
 ```
-
-## 🔧 調試工具
-
-如果遇到問題，可以使用 `mobi_debug.py` 來診斷：
-```bash
-python mobi_debug.py
-```
-
-它會：
-- 列出所有表單元素(select、radio、checkbox)
-- 顯示每個元素的屬性
-- 嘗試自動選擇"強制繁體"
-- 保存完整HTML到 debug_page.html
-
-## 📊 輸出範例
-
-```
-找到 3 個文件需要轉換
-輸出文件夾: /path/to/mobi_output
 
 ⏱️  等待時間設定:
    • 點擊'開始上傳'後等待: 5 分鐘
